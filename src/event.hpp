@@ -59,7 +59,7 @@ struct MousePress        // Do we need coords here?
 
 struct KeyPress
 {
-    int key;
+    int key;             // Actually ascii number
     int scancode;
     Action action;
     int mods;            // Check with PressMode

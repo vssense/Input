@@ -1,6 +1,8 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 
+#include "window.hpp"
+
 void ScrollCallback(GLFWwindow* window, double dx, double dy)
 {
     // Do not know why here is dx. It is always zero
@@ -37,23 +39,10 @@ void CloseCallback(GLFWwindow* window)
 
 int main(void)
 {
-    GLFWwindow* window = nullptr;
-
-    /* Initialize the library */
-    if (!glfwInit())
-    {
-        return -1;
-    }
-
+    Window window_{};
+    GLFWwindow* window = window_.GetNativeWindow();
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
-
     glfwSetKeyCallback(window, KeyCallback);
     glfwSetWindowCloseCallback(window, CloseCallback);
     glfwSetCursorPosCallback(window, CursorPositionCallback);
@@ -75,6 +64,5 @@ int main(void)
         glfwPollEvents();
     }
 
-    glfwTerminate();
     return 0;
 }
