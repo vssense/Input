@@ -2,52 +2,22 @@
 #include <GLFW/glfw3.h>
 
 #include "window.hpp"
+#include "event.hpp"
 
-void ScrollCallback(GLFWwindow* window, double dx, double dy)
+using namespace input;
+
+int main()
 {
-    // Do not know why here is dx. It is always zero
-    // Upd: Found it being no zero with touchpad 
-    std::cout << '[' << dx << ';' << dy << ']' << '\n';
-}
+    std::cout << "sizeof Event = " << sizeof(Event) << '\n';
 
-
-void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
-{
-    std::cout << "button = " << button << '\n';
-    std::cout << "action = " << action << '\n';
-    std::cout << "mods   = " << mods << '\n';
-}
-
-void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    std::cout << "key      = " << char(key) << '\n';
-    std::cout << "scancode = " << scancode << '\n';
-    std::cout << "action   = " << action << '\n';
-    std::cout << "mods     = " << mods << '\n';
-}
-
-void CursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
-{
-    std::cout << '[' << xpos << ';' << ypos << ']' << '\n';
-}
-
-
-void CloseCallback(GLFWwindow* window)
-{
-    std::cout << "Closing1111111111111111111111111\n";
-}
-
-int main(void)
-{
     Window window_{};
+    EventManager::SetWindow(&window_);
+
     GLFWwindow* window = window_.GetNativeWindow();
 
+    Event event{};
+
     /* Create a windowed mode window and its OpenGL context */
-    glfwSetKeyCallback(window, KeyCallback);
-    glfwSetWindowCloseCallback(window, CloseCallback);
-    glfwSetCursorPosCallback(window, CursorPositionCallback);
-    glfwSetMouseButtonCallback(window, MouseButtonCallback);
-    glfwSetScrollCallback(window, ScrollCallback);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
@@ -55,13 +25,17 @@ int main(void)
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        while (event.PollEvent())
+        {
+            std::cout << "Event processing\n";
+        }
+
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
         /* Poll for and process events */
-        glfwPollEvents();
     }
 
     return 0;
