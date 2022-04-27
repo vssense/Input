@@ -14,6 +14,8 @@ Window::Window(size_t width, size_t height, const char* title)
 
     window_ = glfwCreateWindow(width, height, title, NULL, NULL);
     assert(window_ && "Can't create a window");
+
+    glfwMakeContextCurrent(window_);
 }
 
 void Window::SetTitle(const char* title)
