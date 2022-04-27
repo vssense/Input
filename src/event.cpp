@@ -1,26 +1,28 @@
-#include "event.hpp"
-
+#include <cassert>
 #include <iostream>
+#include <GLFW/glfw3.h>
+
+#include "event.hpp"
 
 namespace input
 {
 
-Window* EventManager::window_ = nullptr;
-std::queue<Event> EventManager::queue_{};
+Window* EventQueue::window_ = nullptr;
+std::queue<Event> EventQueue::queue_{};
 
-void EventManager::ScrollCallback(GLFWwindow* window, double dx, double dy)
+void EventQueue::ScrollCallback(GLFWwindow* window, double dx, double dy)
 {
     std::cout << '[' << dx << ';' << dy << ']' << '\n';
 }
 
-void EventManager::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+void EventQueue::MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
     std::cout << "button = " << button << '\n';
     std::cout << "action = " << action << '\n';
     std::cout << "mods   = " << mods << '\n';
 }
 
-void EventManager::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void EventQueue::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     std::cout << "key      = " << char(key) << '\n';
     std::cout << "scancode = " << scancode << '\n';
@@ -28,17 +30,17 @@ void EventManager::KeyCallback(GLFWwindow* window, int key, int scancode, int ac
     std::cout << "mods     = " << mods << '\n';
 }
 
-void EventManager::MouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
+void EventQueue::MouseMoveCallback(GLFWwindow* window, double xpos, double ypos)
 {
     std::cout << '[' << xpos << ';' << ypos << ']' << '\n';
 }
 
-void EventManager::CloseCallback(GLFWwindow* window)
+void EventQueue::CloseCallback(GLFWwindow* window)
 {
     std::cout << "Closing!1!1!1!1!1\n";
 }
 
-void EventManager::SetWindow(Window* window)
+void EventQueue::SetWindow(Window* window)
 {
     assert(window);
 
@@ -52,12 +54,12 @@ void EventManager::SetWindow(Window* window)
     glfwSetScrollCallback(native_window, ScrollCallback);
 }
 
-void EventManager::PostEvent(const Event& event)
+void EventQueue::PostEvent(const Event& event)
 {
     queue_.push(event);
 }
 
-bool EventManager::PollEvent(Event* event)
+bool EventQueue::PollEvent(Event* event)
 {
     glfwPollEvents();
 
@@ -72,19 +74,9 @@ bool EventManager::PollEvent(Event* event)
     return false;
 }
 
-bool Event::PollEvent()
+bool PollEvent(Event* event)
 {
-    return EventManager::PollEvent(this);
-}
-
-EventData Event::GetData() const
-{
-    return data_;    
-}
-
-EventType Event::GetType() const
-{
-    return type_;
+    return EventQueue::PollEvent(event);
 }
 
 } // namespace input

@@ -1,6 +1,9 @@
+#include <cassert>
+#include <GLFW/glfw3.h>
+
 #include "window.hpp"
 
-#include <cassert>
+const char* Window::kDefaultTitle = "Success is inevitable";
 
 Window::Window(size_t width, size_t height, const char* title)
 {

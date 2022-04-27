@@ -8,10 +8,10 @@ using namespace input;
 
 int main()
 {
-    std::cout << "sizeof Event = " << sizeof(Event) << '\n';
+    std::cout << "sizeof Mods = " << sizeof(ButtonMode) << '\n';
 
     Window window_{};
-    EventManager::SetWindow(&window_);
+    EventQueue::SetWindow(&window_);
 
     GLFWwindow* window = window_.GetNativeWindow();
 
@@ -25,7 +25,7 @@ int main()
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
-        while (event.PollEvent())
+        while (PollEvent(&event))
         {
             std::cout << "Event processing\n";
         }

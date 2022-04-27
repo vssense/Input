@@ -1,25 +1,28 @@
 #ifndef _WINDOW_HPP_INCLUDED
 #define _WINDOW_HPP_INCLUDED
 
-#include <GLFW/glfw3.h>
+class GLFWwindow;
 
-const size_t kDefaultWidth = 640;
-const size_t kDefaultHeight = 480;
-
-constexpr const char* kDefaultTitle = "Success is inevitable";
+typedef GLFWwindow NativeWindow;
 
 class Window
 {
-public:
+  public:
     Window(size_t width = kDefaultWidth, size_t height = kDefaultHeight,
            const char* title = kDefaultTitle);
     ~Window();
 
-    GLFWwindow* GetNativeWindow();
+    NativeWindow* GetNativeWindow();
     void SetTitle(const char* title);
 
-private:
-    GLFWwindow* window_;
+  public:
+    static const size_t kDefaultWidth = 640;
+    static const size_t kDefaultHeight = 480;
+    
+    static const char* kDefaultTitle;
+
+  private:
+    NativeWindow* window_;
 };
 
 #endif // _WINDOW_HPP_INCLUDED

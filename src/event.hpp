@@ -13,12 +13,12 @@ namespace input
 
 enum EventType
 {
+    kNoEvent,
     kQuit,
-    kKeyPress,
-    kMousePress,
+    kKey,
+    kMouseButton,
     kMouseMove,
     kMouseScroll,
-
 
     // kMouseEnter,
     // kMouseLeave,
@@ -27,83 +27,88 @@ enum EventType
 enum Action
 {
     kPress,
-    lRelease,
+    kRelease,
     kHold
 };
 
 enum MouseButton
 {
-    kLMB,
-    kRMB,
-    kScrollWheel,
-    kSideButton1,
-    kSideButton2
+    kLeftMouseButton,
+    kRightMouseButton,
+    kMiddleMouseButton,
+    kX1MouseButton,
+    kX2MouseButton
 };
 
-struct PressMode
+struct ButtonMode
 {
-    int shift_pressed : 1;
-    int ctrl_pressed  : 1;
-    int alt_pressed   : 1;
+    bool shift_pressed : 1;
+    bool ctrl_pressed  : 1;
+    bool alt_pressed   : 1;
 };
 
-struct Scroll
+struct ScrollEventData
 {
     int dx;
     int dy;
 };
 
-struct MouseMove         // Do we need dx and dy here?
+struct MouseMoveEventData         // Do we need dx and dy here?
 {
     int x;
     int y;
 };
 
-struct MousePress        // Do we need coords here?
+struct MouseButtonEventData        // Do we need coords here?
 {
     MouseButton button;
     Action action;
-    PressMode mode;      // Check with PressMode
+    ButtonMode mode;
 };
 
-struct KeyPress
+struct KeyEventData
 {
-    int key;             // Actually ascii codes
+    int key;              // Actually ascii codes
     int scancode;
     Action action;
-    PressMode mods;      // Check with PressMode
+    ButtonMode mods;      // Check with ButtonMode
 };
 
 union EventData
 {
-    MouseMove  mouse;
-    MousePress button;
-    KeyPress   key;
-    Scroll     scroll;
+    MouseMoveEventData   mouse;
+    MouseButtonEventData button;
+    KeyEventData         key;
+    ScrollEventData      scroll;
 };
 
 class Event
 {
   public:
-    Event() {}
 
-    bool PollEvent();
+    EventType& GetType()
+    {
+        return type_;
+    }
 
-    EventData GetData() const;              // mb inline
-    EventType GetType() const;
+    EventData& GetData()
+    {
+        return data_;
+    }
 
   private:
     EventType type_;
     EventData data_;
-
 };
 
-class EventManager
+bool PollEvent(Event* event);
+
+class EventQueue
 {
   private:
-    EventManager() {}
-  public:
+    EventQueue() {}
 
+  public:
     static void SetWindow(Window* window);
 
     static void PostEvent(const Event& event);
